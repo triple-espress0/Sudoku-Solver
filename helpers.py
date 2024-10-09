@@ -1,4 +1,5 @@
 """Helper functions for the CLI and GUI sudoku solver"""
+
 from dokusan import generators
 
 
@@ -8,8 +9,9 @@ def generate_sudoku_list():
     sudoku = str(generators.random_sudoku(avg_rank=150))
     return [[int(i) for i in list(sudoku[j : j + 9])] for j in range(0, 81, 9)]
 
+
 def is_valid(board, row, col, num):
-    '''Helper function that checks whether a candidate value is a valid choice'''
+    """Helper function that checks whether a candidate value is a valid choice"""
     # Check if the number is already present in the row
     if num in board[row]:
         return False
@@ -27,9 +29,10 @@ def is_valid(board, row, col, num):
 
     return True
 
+
 def find_empty_location(board):
-    '''Helper function that finds the first empty cell in a board'''
-    
+    """Helper function that finds the first empty cell in a board"""
+
     for i in range(9):
         for j in range(9):
             if board[i][j] == 0:

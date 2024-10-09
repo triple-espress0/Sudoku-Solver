@@ -1,4 +1,10 @@
+asyncgui==0.6.3
+asynckivy==0.6.4
+docutils==0.20.1
 dokusan==0.1.0
-Kivy==2.2.1
-Kivy-Garden==0.1.5
-kivymd==1.1.1
+exceptiongroup==1.2.2
+Kivy==2.3.0
+kivymd @ https://github.com/kivymd/KivyMD/archive/master.zip
+materialyoucolor==2.0.9
+Pillow==10.1.0
+Pygments==2.17.2
