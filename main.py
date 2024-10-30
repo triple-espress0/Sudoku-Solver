@@ -32,7 +32,7 @@ sudoku_solve_speed = 5000
 class GridCell(MDLabel):
     """Defines a single cell of the sudoku grid"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(MDLabel, self).__init__(*args, **kwargs)
         self.border_width = 1
 
@@ -55,7 +55,7 @@ class GridCell(MDLabel):
         self.size = (dp(110), dp(50))
         self.font_size = "30sp"
 
-    def _update_rect(self, *args):
+    def _update_rect(self, *args) -> None:
         """Formats the borders of the grid cells on move/resize"""
         self.border.size = self.size
         self.border.pos = self.pos
@@ -69,7 +69,7 @@ class GridCell(MDLabel):
 class BoardArea(MDGridLayout):
     """Defines the area of the game board that holds the sudoku grid itself. Consists of 81 labels representing each cell in a sudoku grid."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(BoardArea, self).__init__(*args, **kwargs)
 
         self.border_width = 1.5
@@ -110,7 +110,7 @@ class BoardArea(MDGridLayout):
 
         self._populate_board()
 
-    def _update_border(self, *args):
+    def _update_border(self, *args) -> None:
         """Formats the borders of the board area on move/resize"""
         self.border_line.rectangle = (
             self.x + self.padding[0],
@@ -155,7 +155,7 @@ class BoardArea(MDGridLayout):
             self.y + ((self.height - self.padding[1] - self.padding[3]) / 3) * 2,
         ]
 
-    def _populate_board(self):
+    def _populate_board(self) -> None:
         """Populates the sudoku grid with the generated sudoku upon instance initialisation."""
         for i in range(9):
             for j in range(9):
@@ -170,10 +170,10 @@ class BoardArea(MDGridLayout):
 
         return
 
-    def generate_new_board(self, instance):
+    def generate_new_board(self, _) -> None:
         """Generates new sudoku board and displays it on the GUI"""
 
-        def reformat_text(index):
+        def reformat_text(index: int) -> None:
             """Reformats the sudoku cells that have been changed by previous runs of the game."""
             self.children[index].color = (0, 0, 0, 1)  # White font color
 
@@ -194,11 +194,11 @@ class BoardArea(MDGridLayout):
 
     def solve_board(
         self,
-        sudoku_board,
-        first_call=True,
-        start_time=0,
-        sleep_time=1 / sudoku_solve_speed,
-    ):
+        sudoku_board: list[list[int]],
+        first_call: bool = True,
+        start_time: float = 0,
+        sleep_time: float = 1 / sudoku_solve_speed,
+    ) -> bool:
         """Solves a sudoku board using backtracking algorithm. 'first_call' and 'start_time' are used to calculate the total runtime of the solve function.
         'sleep_time' is used to delay the code execution and allow for more clear visualisation of the solving algorithm.
         """
@@ -211,11 +211,11 @@ class BoardArea(MDGridLayout):
 
         empty_row, empty_col = find_empty_location(sudoku_board)
 
-        if empty_row is None:
+        if empty_row == -1:
             execution_time = time.time() - start_time
 
             Clock.schedule_once(
-                partial(self.show_execution_time_popup, str(execution_time)), -1
+                partial(self.show_execution_time_popup, execution_time), -1
             )
 
             return True
@@ -256,30 +256,30 @@ class BoardArea(MDGridLayout):
         first_call = False
         return False
 
-    def format_current_invalid_label(self, label_id, label_text, dt):
+    def format_current_invalid_label(self, label_id: int, label_text: int, _) -> None:
         """Formats sudoku cell that is confirmed to be invalid"""
         self.children[label_id].text = str(label_text)
         self.children[label_id].color = (1, 0, 0, 1)  # Red font color
 
-    def format_current_label(self, label_id, label_text, dt):
+    def format_current_label(self, label_id: int, label_text: int, _) -> None:
         """Formats the currently evaluated sudoku cell"""
         self.children[label_id].text = str(label_text)
         self.children[label_id].color = (0, 0, 1, 1)  # Blue font color
 
-    def format_valid_label(self, label_id, label_text, dt):
+    def format_valid_label(self, label_id: int, label_text: int, _) -> None:
         """Formats sudoku cell that is confirmed to be valid"""
         self.children[label_id].text = str(label_text)
         self.children[label_id].color = (0, 1, 0, 1)  # Green font color
 
-    def format_invalid_label(self, label_id, dt):
+    def format_invalid_label(self, label_id: int, _) -> None:
         """Formats all cells up to the last confirmed to be invalid cell"""
         self.children[label_id].color = (1, 0, 0, 0.3)  # Light red font color
 
-    def show_execution_time_popup(self, elapsed_time, dt):
+    def show_execution_time_popup(self, elapsed_time: float, _) -> None:
         """Shows a popup with the execution time"""
-        minutes = int(float(elapsed_time) // 60)
-        seconds = int(float(elapsed_time) % 60)
-        milliseconds = int((float(elapsed_time) - int(float(elapsed_time))) * 10000)
+        minutes = int(elapsed_time // 60)
+        seconds = int(elapsed_time % 60)
+        milliseconds = int((elapsed_time - int(elapsed_time)) * 10000)
 
         formatted_time = f"{minutes:02}m:{seconds:02}s:{milliseconds:05}ms"
 
@@ -301,7 +301,7 @@ class BoardArea(MDGridLayout):
 
 class SliderArea(MDBoxLayout):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(SliderArea, self).__init__(*args, **kwargs)
 
         self.add_widget(
@@ -319,7 +319,7 @@ class SliderArea(MDBoxLayout):
 
         solve_speed_slider.bind(value=self.OnSliderValueChange)
 
-    def OnSliderValueChange(self, instance, value):
+    def OnSliderValueChange(self, _, value: int) -> None:
         global sudoku_solve_speed
         sudoku_solve_speed = value
 
@@ -327,7 +327,7 @@ class SliderArea(MDBoxLayout):
 class ButtonsArea(MDFloatLayout):
     """Defines the area of the game board that holds the action buttons"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(MDFloatLayout, self).__init__(*args, **kwargs)
 
         self.add_widget(
@@ -350,7 +350,7 @@ class ButtonsArea(MDFloatLayout):
 class SudokuGame(MDBoxLayout):
     """Contains the complete game area and consists of all the vertically stacked sub-elements."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super(SudokuGame, self).__init__(*args, **kwargs)
 
         self.add_widget(
@@ -390,7 +390,7 @@ class SudokuGame(MDBoxLayout):
 
         print(self.children)
 
-    def trigger_solving(self):
+    def trigger_solving(self) -> None:
         self.thread_running.set()
         self.children[2].solve_board(
             sudoku_board=self.children[2].sudoku_board
@@ -401,7 +401,7 @@ class SudokuGame(MDBoxLayout):
             0
         ].disabled = False  # Re-enable 'Generate new' button after thread finishes
 
-    def start_threaded_solving(self, instance):
+    def start_threaded_solving(self, _) -> None:
         if self.thread is None or not self.thread.is_alive():
             self.children[0].children[
                 0
@@ -412,7 +412,7 @@ class SudokuGame(MDBoxLayout):
 
 class MainApp(MDApp):
 
-    def build(self):
+    def build(self) -> SudokuGame:
         self.theme_cls.theme_style = "Light"
         self.theme_cls.primary_palette = "Whitesmoke"
 
